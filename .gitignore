@@ -1,0 +1,12 @@
+software/ceas/Debug
+software/ceas/Drivers
+software/ceas/Middlewares
+software/ceas/USB_HOST
+software/ceas/.cproject
+software/ceas/.project
+software/ceas/.mxproject
+software/ceas/ceas Debug.launch
+software/ceas/ceas.ioc
+software/ceas/.settings
+software/ceas/STM32F407VGTX_FLASH.ld
+software/ceas/STM32F407VGTX_RAM.ld
