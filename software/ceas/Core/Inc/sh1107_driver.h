@@ -18,7 +18,7 @@
  * MACROS AND DEFINES
  ************************************/
 #define MAX_COMMAND_SIZE 32
-#define DEVICE_ADDRESS 0x78 //actually 0x3C but shifted left by one
+#define DISPLAY_I2C_ADDRESS 0x78 //actually 0x3C but shifted left by one
 
 //Commands, see datasheet
 #define COMMAND_START 0x00

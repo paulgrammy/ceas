@@ -7,36 +7,42 @@
  ********************************************************************************
  */
 
-#ifndef ${include_guard_symbol}
-#define ${include_guard_symbol}
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef TASK_I2C_H
+#define TASK_I2C_H
 
 /************************************
  * INCLUDES
  ************************************/
 
+#include "i2c.h"
+#include "sh1107_driver.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
 /************************************
  * MACROS AND DEFINES
  ************************************/
+
+
 
 /************************************
  * TYPEDEFS
  ************************************/
 
+
+
 /************************************
  * GLOBAL VARIABLES
  ************************************/
 
+extern TaskHandle_t handle_task_i2c;
+
 /************************************
  * GLOBAL FUNCTION PROTOTYPES
  ************************************/
+BaseType_t task_i2c_init();
+void task_i2c(void* pvParameters);
+void write_command(uint8_t buffer);
 
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif //TASK_I2C_H

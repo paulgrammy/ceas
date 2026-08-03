@@ -37,18 +37,27 @@ display_command_t test_command = {
 
 display_command_t init_command = {
 				.command = {
-					    0x00,                                 // Control byte: Following bytes are commands
-					    COMMAND_SET_DISPLAY_OFF,              // 0xAE
-					    COMMAND_SET_DISPLAY_START_LINE, 0x00, // 0xDC, 0x00
-					    COMMAND_SET_CONTRAST, 0x7F,           // 0x81, 0x7F (Mid-contrast value)
-					    COMMAND_SET_SEGMENT_REMAP_DOWN,       // 0xA0
-					    COMMAND_SET_OUTPUT_DIRECTION,         // 0xC0
-					    COMMAND_SET_MULTIPLEX_RATIO, 0x7F,    // 0xA8, 0x7F (For 128x128 screens)
-					    COMMAND_SET_DCDC_CONTROL, COMMAND_SET_CHARGE_PUMP, // 0xAD, 0x8A (Turn on internal charge pump)
-					    COMMAND_SET_ENTIRE_DISPLAY_NORMAL,    // 0xA4 (Read and display pixel data from RAM)
-						COMMAND_SET_DISPLAY_NORMAL,           // 0xA6 (Normal colors: 1 = pixel on, 0 = pixel off)
-					    COMMAND_SET_DISPLAY_ON                // 0xAF (Activate display output)
-				},
+						COMMAND_START,
+					    0x80, 0xAE,  // Display OFF (good practice before changing settings)
+//					    0x80, 0x81,  // Command: Set Contrast Control
+//					    0x80, 0x7F,  // Parameter: Mid-level contrast brightness
+//					    0x80, 0xA5,  // Command: Entire Display ON (Forces all pixels ON, bypassing RAM contents)
+//					    0x80, 0xAF   // Command: Display ON
+						COMMAND_SET_DISPLAY_START_LINE, 0x00,
+						COMMAND_SET_MEMORY_ADDRESSING_MODE, 0x00,
+						COMMAND_SET_CONTRAST, 0x70,
+						COMMAND_SET_SEGMENT_REMAP_DOWN,
+						COMMAND_SET_OUTPUT_DIRECTION,
+						COMMAND_SET_MULTIPLEX_RATIO, 0x7F,
+						COMMAND_SET_DISPLAY_OFFSET, 0x00,
+						COMMAND_SET_FREQUENY_DIVIDER, 0x50,
+						COMMAND_SET_DISorPRE_CHARGE_PERIOD, 0x22,
+						COMMAND_SET_VCOM_LEVEL, 0x35,
+						COMMAND_SET_DCDC_CONTROL,
+						COMMAND_SET_CHARGE_PUMP,
+						COMMAND_SET_DISPLAY_NORMAL,
+						COMMAND_SET_DISPLAY_ON,
+					},
 				.command_size = 11
 		};
 /************************************

@@ -27,7 +27,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "sh1107_driver.h"
+#include "task_i2c.h"
+#include "FreeRTOS.h"
+#include "task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +51,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-I2C_HandleTypeDef hi2c1;
+RTC_TimeTypeDef sTime = {0};
+RTC_DateTypeDef sDate = {0};
+RTC_AlarmTypeDef sAlarm = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,11 +68,14 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
   /* NOTE: This function should not be modified, when the callback is needed,
            the HAL_RTC_AlarmAEventCallback could be implemented in the user file
    */
+  HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, 1);
 }
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+
 
 /* USER CODE END 0 */
 
@@ -100,11 +108,21 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_I2C1_Init();
   MX_SPI1_Init();
   MX_RTC_Init();
-  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+  xTaskCreate(task_i2c, "I2C", 2048, NULL, 2, &handle_task_i2c);
 
+//  if(HAL_I2C_IsDeviceReady(&hi2c1, DISPLAY_I2C_ADDRESS, 3, 100) == HAL_OK)
+//  {
+//	  HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, DISPLAY_I2C_ADDRESS, init_command.command, sizeof(init_command.command), HAL_MAX_DELAY);
+//	  if (status == HAL_OK)
+//	  {
+//	      HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, 1); // initialization acked!
+//	  }
+//  }
+  task_i2c_init();
   /* USER CODE END 2 */
 
   /* Init scheduler */
