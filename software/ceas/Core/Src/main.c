@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "sh1107_driver.h"
 #include "task_i2c.h"
+#include "task_clock.h"
 #include "FreeRTOS.h"
 #include "task.h"
 /* USER CODE END Includes */
@@ -40,7 +41,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define NUMBER_TASKS 1 //currently only one task is running
+#define NUMBER_TASKS 2 //currently only one task is running
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,11 +52,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-RTC_TimeTypeDef sTime = {0};
-RTC_DateTypeDef sDate = {0};
-RTC_AlarmTypeDef sAlarm = {0};
 BaseType_t status_task_create[NUMBER_TASKS];
 BaseType_t status_task_init[NUMBER_TASKS];
+volatile uint8_t new_second_ready = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,6 +71,15 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
    */
   HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, 1);
 }
+void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc)
+{
+    if (hrtc->Instance == RTC)
+    {
+        // Set the flag; this ISR executes in microseconds
+        new_second_ready = 1;
+    }
+}
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -122,9 +130,12 @@ int main(void)
   status_task_init[0] = task_i2c_init();
   clear_screen();
 
-  status_task_create[0] = xTaskCreate(task_i2c, "I2C", 2048, NULL, 2, &handle_task_i2c);
+  status_task_init[1] = task_clock_init();
 
-  if(!status_task_init[0] || !status_task_create[0])
+  status_task_create[0] = xTaskCreate(task_i2c, "I2C", 1024, NULL, 2, &handle_task_i2c);
+  status_task_create[1] = xTaskCreate(task_clock, "CLOCK", 1024, NULL, 1, &handle_task_clock);
+
+  if(!status_task_init[0] || !status_task_create[0] || !status_task_init[1] || !status_task_create[1])
   {
 	  HAL_GPIO_WritePin(LD5_GPIO_Port, LD5_Pin, 1);
 

@@ -55,7 +55,7 @@ display_command_t init_command = {
 						COMMAND_SET_ENTIRE_DISPLAY_ON,
 						COMMAND_SET_DISPLAY_ON,
 					},
-				.command_size = 11
+				.command_size = 16
 		};
 /************************************
  * PRIVATE MACROS AND DEFINES

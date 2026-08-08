@@ -143,9 +143,6 @@ void task_i2c(void* pvParameters)
 	//notification from clock task, for now, always enter it
 	while(1)
 	{
-//		HAL_GPIO_TogglePin(LD5_GPIO_Port, LD5_Pin);
-//		vTaskDelay(1000);
-
 		write_data();
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
