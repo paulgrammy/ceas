@@ -38,11 +38,7 @@ display_command_t test_command = {
 display_command_t init_command = {
 				.command = {
 						COMMAND_START,
-					    0x80, 0xAE,  // Display OFF (good practice before changing settings)
-//					    0x80, 0x81,  // Command: Set Contrast Control
-//					    0x80, 0x7F,  // Parameter: Mid-level contrast brightness
-//					    0x80, 0xA5,  // Command: Entire Display ON (Forces all pixels ON, bypassing RAM contents)
-//					    0x80, 0xAF   // Command: Display ON
+						COMMAND_SET_DISPLAY_OFF,
 						COMMAND_SET_DISPLAY_START_LINE, 0x00,
 						COMMAND_SET_MEMORY_ADDRESSING_MODE, 0x00,
 						COMMAND_SET_CONTRAST, 0x70,
@@ -53,9 +49,10 @@ display_command_t init_command = {
 						COMMAND_SET_FREQUENY_DIVIDER, 0x50,
 						COMMAND_SET_DISorPRE_CHARGE_PERIOD, 0x22,
 						COMMAND_SET_VCOM_LEVEL, 0x35,
-						COMMAND_SET_DCDC_CONTROL,
-						COMMAND_SET_CHARGE_PUMP,
+						//COMMAND_SET_DCDC_CONTROL,
+						//COMMAND_SET_CHARGE_PUMP,
 						COMMAND_SET_DISPLAY_NORMAL,
+						COMMAND_SET_ENTIRE_DISPLAY_ON,
 						COMMAND_SET_DISPLAY_ON,
 					},
 				.command_size = 11

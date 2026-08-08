@@ -49,6 +49,9 @@
 
 #define COMMAND_SET_PAGE_ADDRESS 0xB0 //specifies page address to load display RAM data to, first bit is address
 
+#define COMMAND_SET_LOWER_COLUMN_ADDRESS 0x00
+#define COMMAND_SET_HIGHER_COLUMN_ADDRESS 0x10
+
 #define COMMAND_SET_OUTPUT_DIRECTION 0xC0
 
 #define COMMAND_SET_FREQUENY_DIVIDER 0xD5 //first bit is divide ration, second bit is oscillator frequency
@@ -82,6 +85,7 @@ extern display_command_t current_command;
 extern display_data_t current_data;
 
 extern display_command_t init_command;
+extern display_command_t test_command;
 /************************************
  * GLOBAL FUNCTION PROTOTYPES
  ************************************/

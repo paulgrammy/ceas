@@ -42,6 +42,7 @@ extern TaskHandle_t handle_task_i2c;
  * GLOBAL FUNCTION PROTOTYPES
  ************************************/
 BaseType_t task_i2c_init();
+extern void clear_screen(void);
 void task_i2c(void* pvParameters);
 void write_command(uint8_t buffer);
 

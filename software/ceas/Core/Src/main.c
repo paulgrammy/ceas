@@ -40,7 +40,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define NUMBER_TASKS 1 //currently only one task is running
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -54,6 +54,8 @@
 RTC_TimeTypeDef sTime = {0};
 RTC_DateTypeDef sDate = {0};
 RTC_AlarmTypeDef sAlarm = {0};
+BaseType_t status_task_create[NUMBER_TASKS];
+BaseType_t status_task_init[NUMBER_TASKS];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,7 +105,12 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+  HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, 0x78, test_command.command, sizeof(test_command.command), HAL_MAX_DELAY);
 
+  if(!status)
+  {
+	  return 1;
+  }
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -112,17 +119,18 @@ int main(void)
   MX_SPI1_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  xTaskCreate(task_i2c, "I2C", 2048, NULL, 2, &handle_task_i2c);
+  status_task_init[0] = task_i2c_init();
+  clear_screen();
 
-//  if(HAL_I2C_IsDeviceReady(&hi2c1, DISPLAY_I2C_ADDRESS, 3, 100) == HAL_OK)
-//  {
-//	  HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, DISPLAY_I2C_ADDRESS, init_command.command, sizeof(init_command.command), HAL_MAX_DELAY);
-//	  if (status == HAL_OK)
-//	  {
-//	      HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, 1); // initialization acked!
-//	  }
-//  }
-  task_i2c_init();
+  status_task_create[0] = xTaskCreate(task_i2c, "I2C", 2048, NULL, 2, &handle_task_i2c);
+
+  if(!status_task_init[0] || !status_task_create[0])
+  {
+	  HAL_GPIO_WritePin(LD5_GPIO_Port, LD5_Pin, 1);
+
+	  return 1;
+  }
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
